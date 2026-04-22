@@ -3,1616 +3,896 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <title>Vanglar - Simuladores UTT</title>
+    <title>VANGLARE - Dashboard</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
-  
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body, html {
+        /* =========================================
+           ESTILOS GENERALES
+           ========================================= */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
             height: 100%;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background-color: #f4f4f4; 
-            overflow-x: hidden; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            overflow-x: hidden;
         }
 
-        img { max-width: 100%; height: auto; display: block; }
-
-        .sidenavIA {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
+        .vanglare-wrapper {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        .sidenavIA .closebtnIA {
-            position: absolute;
+        /* =========================================
+           PANTALLA DE CARGA / LANDING 
+           ========================================= */
+        #SeccionLanding {
+            position: fixed;
             top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-            color: #818181;
-            text-decoration: none;
-        }
-        .sidenavIA .closebtnIA:hover { color: #f1f1f1; }
-
-        .btn-simulador {
-            margin: 10px 0;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            --ancho-borde: 6px;
-            --color-contorno: rgba(255, 255, 255, 0.6);
-            --color-activacion: #37FF8B; 
-            --tamano-fuente: 1.5em; 
-            letter-spacing: 3px;
-            text-decoration: none;
-            font-size: var(--tamano-fuente);
-            font-family: "Arial", sans-serif;
-            position: relative;
-            text-transform: uppercase;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--color-contorno);
-        }
-
-        .texto-efecto {
-            position: absolute;
-            box-sizing: border-box;
-            content: attr(data-text);
-            color: var(--color-activacion);
-            width: 0%;
-            inset: 0;
-            border-right: var(--ancho-borde) solid var(--color-activacion);
-            overflow: hidden;
-            transition: 0.5s;
-            -webkit-text-stroke: 1px var(--color-activacion);
-        }
-        .btn-simulador:hover .texto-efecto {
+            left: 0;
             width: 100%;
-            filter: drop-shadow(0 0 23px var(--color-activacion));
+            height: 100%;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
         }
 
-    
-        .top-header {
-            background-color: #000000;
-            padding: 15px 5%; 
+        .vanglare-logo-box {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .vanglare-logo-box img {
+            max-width: 100%;
+            height: auto;
+            mix-blend-mode: screen; 
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        .vanglare-btn-entrar {
+            background: none;
+            border: none;
+            padding-bottom: 60px;
+            letter-spacing: 12px; 
+            font-weight: 300;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: linear-gradient(to right, rgba(255,255,255,0.2) 0%, #fff 50%, rgba(255,255,255,0.2) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: vanglare-shine 3s linear infinite, vanglare-fadeIn 3s ease-in;
+        }
+
+        @keyframes vanglare-shine { to { background-position: 200% center; } }
+        @keyframes vanglare-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* =========================================
+           INTERFAZ PRINCIPAL Y NAVEGACIÓN
+           ========================================= */
+        #InterfazPrincipal {
+            display: none; 
+            height: 100%;
+            background-color: #ffffff;
+            color: #000000;
+            display: flex; 
+            flex-direction: column;
+        }
+
+        .navbar-custom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: nowrap; 
+            padding: 20px 5%; 
+            background-color: transparent;
+            position: relative;
+            flex-shrink: 0;
         }
-        .logo {
+
+        .logo-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .logo-text {
+            font-size: 34px;
+            font-weight: 500;
+            letter-spacing: 16px;
+            color: #000000;
+            margin: 0;
+            padding-left: 16px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .btn-menu {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 24px;
+            width: 35px;
+            z-index: 10; 
+            margin-left: auto;
+        }
+
+        .btn-menu span {
+            display: block;
+            height: 4px;
+            width: 100%;
+            background-color: #000000;
+            border-radius: 2px;
+        }
+
+        .btn-menu:focus { outline: none; }
+
+        .offcanvas-custom {
+            background-color: #000000 !important;
             color: #ffffff;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: clamp(1.5rem, 5vw, 2.8rem); 
-            letter-spacing: 2px;
         }
-        .teal-stripe {
-            background-color: #00a896;
-            height: 25px;
+
+        .vanglare-nav-btn {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            text-align: right;
+            width: 100%;
+            padding: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+
+        .vanglare-nav-btn:hover { color: #aaaaaa; }
+
+        .vanglare-content-panel {
+            display: none;
+            flex-grow: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            background-color: #ffffff; 
+            padding: 0; 
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
             width: 100%;
         }
 
-
-        .btnAS {
-            width: 150px;
-            height: 50px;
-            border-radius: 5px;
-            border: none;
-            transition: all 0.5s ease-in-out;
-            font-size: 20px;
-            font-family: Verdana, sans-serif;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            background: #00A683;
-            color: #000000;
-            cursor: pointer;
-            position: relative;
-        }
-        .btnAS:hover { box-shadow: 0 0 20px 0px #FFFFFF; }
-        .btnAS .iconAS {
-            position: absolute;
-            height: 40px;
-            width: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.5s;
-        }
-        .btnAS .textAS { transform: translateX(55px); transition: all 0.5s;}
-        .btnAS:hover .iconAS { width: 100%; }
-        .btnAS:hover .textAS { opacity: 0; }
-
-        @media (max-width: 480px) {
-            /* Ajuste vital para celulares pequeños */
-            .btnAS { width: 110px; height: 40px; font-size: 16px; }
-            .btnAS .textAS { transform: translateX(45px); }
-        }
-
-    
-        .tabcontent {
-            display: none;
-            background-color: #ffffff;
-            min-height: 100vh;
-            padding-bottom: 50px;
-        }
-        #Home { display: block; }
-
- 
-        .hero-container {
-            padding-top: 50px;
+        /* Contenedor para mantener centrado el contenido superior sin que toque los bordes */
+        .contenido-centrado {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 4%;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .covers-wrapper {
+
+        /* =========================================
+           CARRUSEL
+           ========================================= */
+        .carousel-redondeado {
+            width: 100%;
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .carousel-item img {
+            border-radius: 15px; 
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* =========================================
+           SECCIÓN DE TARJETAS / TRAMITES
+           ========================================= */
+        .tarjetas-container {
+            background-color: #000000;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .flip-card-custom {
+            background-color: #e6e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100%;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+
+        .flip-card-custom:hover { transform: translateY(-5px); }
+
+        .vista-icono {
+            flex: 1;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            z-index: 2;
-            margin-bottom: -100px;
-            flex-wrap: wrap;
-            padding: 0 20px;
-        }
-        .cover-box {
-            width: 380px;
-            max-width: 100%;
-            aspect-ratio: 380 / 550;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .cover-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .black-info-block {
-            background-color: #000000;
-            color: #ffffff;
+            align-items: center;
+            padding: 0;
             width: 100%;
-            padding: 150px 5% 60px 5%;
-            text-align: center;
-            z-index: 1;
+            height: 100%;
         }
-        .description-text {
-            max-width: 900px;
-            margin: 0 auto;
+
+        .vista-icono img {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            object-fit: cover;
+        }
+
+        .vista-info {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .vista-info-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .vista-info-texto {
+            padding: 20px;
+            color: #000;
+        }
+
+        .vista-info-texto h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .vista-info-texto p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* =========================================
+           SECCIÓN: DISEÑO TIPO TICKET
+           ========================================= */
+        .secciones-lista-container {
+            width: 100%;
+            margin: 20px auto 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .seccion-list-card {
+            border-radius: 15px;
+            background-color: #2A9669;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .slc-header {
+            background-color: #000000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .slc-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .slc-divider-container {
+            position: relative;
+            height: 0px; 
+            width: 100%;
+            z-index: 20;
+        }
+
+        .slc-dashed-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border-top: 3px dashed #ffffff;
+            opacity: 0.9;
+        }
+
+        .slc-divider-container::before, .slc-divider-container::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            width: 30px;
+            height: 30px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .slc-divider-container::before { left: -15px; }
+        .slc-divider-container::after { right: -15px; }
+
+        .slc-body {
+            display: flex;
+            height: 250px;
+            background-color: #125E52;
+            position: relative;
+        }
+
+        .slc-body img {
+            width: 45%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slc-content {
+            width: 55%;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .slc-content p {
             font-size: 1.1rem;
             line-height: 1.6;
-            text-align: justify;
-        }
-
-        .split-section {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            padding: 80px 5%;
-            flex-direction: row;
-        }
-        .image-half, .text-half { flex: 1; display: flex; }
-        .image-half { justify-content: center; padding: 20px; }
-        .image-half img { max-width: 35%; }
-        .text-half {
-            background-color: #000000;
-            color: #00a896;
-            padding: 60px 40px;
-            min-height: 450px;
-            align-items: center;
-        }
-        .text-half h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); line-height: 1.2; font-weight: normal; }
-
-        .tools-section { padding-bottom: 50px; }
-        .vuela-proposito-bar {
-            background-color: #000000; color: white; padding: 20px 5%;
-            font-size: clamp(1.5rem, 5vw, 2.5rem); font-family: serif; margin-bottom: 80px;
-        }
-        .tool-item { max-width: 100%; margin: 0 auto 100px auto; padding: 0 5%; display: flex; flex-direction: column; }
-        .airplane-top { width: 100%; max-width: 600px; margin-bottom: -30px; margin-left: 20px; z-index: 2; }
-        .info-bar-bottom {
-            background-color: #000000; color: white; width: 100%; padding: 30px 40px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 1; gap: 20px;
-        }
-        .tool-title { font-size: clamp(1.5rem, 6vw, 3rem); font-family: serif; font-weight: bold; }
-        .btn-yellow {
-            background-color: #fce043; color: #000000; border: none; padding: 12px 35px;
-            font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer;
-            transition: transform 0.2s; white-space: nowrap;
-        }
-        .btn-yellow:hover { transform: scale(1.05); }
-
-        /* Mapa y Footer */
-        .f1-map-container { width: 100%; margin-top: 50px; }
-        .f2-map-wrapper { width: 100%; height: 450px; background-color: #eee; }
-        .f2-map-wrapper iframe { width: 100%; height: 100%; border: 0; }
-        .f3-map-label { background-color: #000000; color: #ffffff; padding: 20px 5%; }
-        .f3-map-label h3 { font-size: 2rem; font-weight: bold; }
-        .f4-rights-bar {
-            background-color: #00A89D; color: #ffffff; text-align: center;
-            padding: 12px 10px; font-weight: bold; font-size: 1.1rem;
-        }
-        .f5-footer-black { background-color: #000000; height: 150px; width: 100%; }
-
-        @media (max-width: 768px) {
-            .split-section { flex-direction: column; padding: 40px 0; }
-            .image-half img { max-width: 60%; margin-bottom: 30px; }
-            .text-half { width: 100%; padding: 40px 20px; text-align: center; justify-content: center; }
-            .info-bar-bottom { flex-direction: column; text-align: center; }
-            .airplane-top { margin-left: 0; align-self: center; }
-            .covers-wrapper { margin-bottom: -50px; }
-            .black-info-block { padding-top: 80px; }
-        }
-
-        header.seccion-header {
-            background-color: #000000; text-align: center; padding: 2rem 1rem; border-bottom: 25px solid #00A89D;
-        }
-        header.seccion-header h1 {
-            color: #ffffff; font-family: 'Times New Roman', Times, serif;
-            font-size: clamp(2rem, 4vw, 3.5rem); text-transform: uppercase;
-        }
-        .q8-wrap {
-            max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;
-        }
-        .x7-box {
-            background-color: #000000; display: flex; flex-direction: column;
-            overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        .p3-pic { width: 100%; height: 250px; }
-        .p3-pic img { width: 100%; height: 100%; object-fit: cover; }
-        .l5-line { background-color: #00A89D; height: 25px; width: 100%; }
-        .t2-txt { padding: 2rem 1.5rem; color: #ffffff; flex-grow: 1; }
-        .t2-txt h2 { font-size: 1.5rem; margin-bottom: 1rem; font-weight: bold; }
-        
-        .z8-wrapper { max-width: 1100px; margin: 20px auto; background-color: #000; }
-        .r4-carousel-img { width: 100%; height: 800px; object-fit: cover; }
-        .m9-stripe { background-color: #00A89D; height: 35px; width: 100%; }
-        .k2-footer-info { background-color: #000000; color: #ffffff; padding: 40px; text-align: justify; }
-        .carousel-indicators li { background-color: #00A89D; }
-
-        @media (max-width: 768px) { .r4-carousel-img { height: 350px; } }
-        @media (max-width: 480px) { .r4-carousel-img { height: 250px; } }
-
-  
-        .marco-global { max-width: 1100px; margin: 40px auto; padding: 0 20px;}
-        .titulo-seccion { font-size: 35px; text-align: center; color: #222; margin-bottom: 20px; }
-        
-    
-        .contenedor-selectores {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px;
-        }
-        .selector-accion {
-            border: none; padding: 12px 20px; background-color: #eee; cursor: pointer;
-            border-radius: 5px; font-weight: bold; transition: 0.3s; flex: 1 1 auto; max-width: 250px;
-        }
-        .selector-accion:hover { background-color: #ddd; }
-        .selector-accion.estado-seleccionado { background-color: #2c3e50; color: white; }
-
-        .tablero-proyectos { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;}
-        .pieza-galeria { width: 100%; display: none; } /* Oculto por defecto para el filtro */
-        .pieza-galeria.activar-visibilidad { display: block; }
-        
-        @media screen and (min-width: 600px) { .pieza-galeria.activar-visibilidad { width: calc(50% - 10px); display: block;} }
-        @media screen and (min-width: 992px) { .pieza-galeria.activar-visibilidad { width: calc(33.333% - 14px); display: block;} }
-
-        .envoltura-info {
-            background-color: white; padding: 15px; border-radius: 8px; height: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #ddd;
-        }
-        .envoltura-info h4 { margin: 15px 0 10px 0; color: #333; }
-        .envoltura-info p { font-size: 14px; color: #666; line-height: 1.4; }
-        .foto-portada { width: 100%; height: 230px; object-fit: cover; border-radius: 4px; cursor: pointer; }
-        .foto-portada:hover { opacity: 0.85; }
-
-        /* Zoom Modal */
-        .pantalla-zoom {
-            display: none; position: fixed; z-index: 99999; padding-top: 50px; left: 0; top: 0;
-            width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); overflow: auto;
-        }
-        .imagen-maximizada { margin: auto; display: block; width: 90%; max-width: 800px; border-radius: 8px; }
-        .texto-descripcion { margin: auto; display: block; width: 80%; text-align: center; color: #fff; padding: 20px 0; font-size: 18px; }
-        .cerrar-visor { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 60px; font-weight: bold; cursor: pointer; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-        .zqxm_master_container {
-            background-color: #131314;
-            color: #e3e3e3;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 40px 15px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            box-sizing: border-box;
-            border-radius: 16px; 
-        }
-
-        .zqxm_wrap {
-            width: 100%;
-            max-width: 700px;
-            padding: 24px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-
-
-        .zqxm_img_box {
-            width: 100%;
             margin-bottom: 20px;
-            border-radius: 12px;
-            overflow: hidden;
-            display: none; 
-            background-color: #202124;
+        }
+
+        .barcode-ticket {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            height: 35px;
+            width: 110px;
+            background: linear-gradient(to right, 
+                #000 3%, transparent 3%, transparent 6%, 
+                #000 6%, #000 9%, transparent 9%, transparent 11%, 
+                #000 11%, #000 16%, transparent 16%, transparent 18%, 
+                #000 18%, #000 20%, transparent 20%, transparent 24%, 
+                #000 24%, #000 28%, transparent 28%, transparent 30%,
+                #000 30%, #000 32%, transparent 32%, transparent 35%,
+                #000 35%, #000 40%, transparent 40%, transparent 42%,
+                #000 42%, #000 45%, transparent 45%, transparent 48%,
+                #000 48%, #000 50%, transparent 50%, transparent 54%,
+                #000 54%, #000 58%, transparent 58%, transparent 60%,
+                #000 60%, #000 62%, transparent 62%, transparent 66%,
+                #000 66%, #000 69%, transparent 69%, transparent 71%,
+                #000 71%, #000 75%, transparent 75%, transparent 78%,
+                #000 78%, #000 80%, transparent 80%, transparent 84%,
+                #000 84%, #000 88%, transparent 88%, transparent 90%,
+                #000 90%, #000 94%, transparent 94%, transparent 96%,
+                #000 96%, #000 100%
+            );
+            opacity: 0.5;
+            mix-blend-mode: multiply;
+        }
+
+        .uiverse-btn {
+            background-color: #e6e7eb;
             text-align: center;
-        }
-
-        .zqxm_img_box img {
-            max-width: 100%;
-            height: auto;
-            max-height: 250px;
-            object-fit: cover;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .zqxm_q_hdr {
+            width: 12rem;
+            border-radius: 1rem;
+            height: 3.5rem;
+            position: relative;
+            color: #000000;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border: 4px solid #e6e7eb;
+            cursor: pointer;
             display: flex;
-            gap: 15px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 24px;
-            line-height: 1.4;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            user-select: none;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
-   
-        .zqxm_opt_grp {
+        .uiverse-btn-bg {
+            background-color: #4ade80; 
+            border-radius: 0.75rem; 
+            height: 100%;
+            width: 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .uiverse-btn:hover .uiverse-btn-bg,
+        .uiverse-btn:active .uiverse-btn-bg {
+            width: 100%; 
+        }
+
+        .uiverse-btn p {
+            transform: translateX(1.5rem); 
+            margin: 0;
+            position: relative;
+            z-index: 20;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .uiverse-btn:hover p,
+        .uiverse-btn:active p {
+            opacity: 0;
+            transform: translateX(3rem);
+        }
+
+        .uiverse-btn svg {
+            position: relative;
+            z-index: 20;
+        }
+
+        /* =========================================
+           MAPA (Alineado con las otras tarjetas)
+           ========================================= */
+        .seccion-mapa-container {
+            width: 100%; 
+            margin: 0 auto 40px auto; 
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 30px;
+            background-color: #f8f9fa;
         }
 
-        .zqxm_opt_node {
-            background-color: #1e1f20;
-            border: 1px solid #444746;
-            border-radius: 12px;
-            padding: 16px 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
+        .mapa-iframe-wrapper {
+            width: 100%;
+            height: 450px; 
         }
 
-        .zqxm_opt_node:hover:not(.zqxm_locked) {
-            background-color: #282a2c;
-        }
-
-        .zqxm_opt_core {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .zqxm_opt_char {
-            font-weight: 500;
-            color: #c4c7c5;
-        }
-
-    
-        .zqxm_opt_node.zqxm_valid {
-            border-color: #81c995;
-            background-color: rgba(129, 201, 149, 0.05);
-        }
-
-        .zqxm_opt_node.zqxm_invalid {
-            border-color: #f28b82;
-            background-color: rgba(242, 139, 130, 0.05);
-        }
-
-        .zqxm_opt_node.zqxm_locked {
-            cursor: default;
-        }
-
-     
-        .zqxm_expl_box {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .zqxm_opt_node.zqxm_valid .zqxm_expl_box {
+        .mapa-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
             display: block;
-            color: #e3e3e3;
-        }
-        
-        .zqxm_opt_node.zqxm_invalid .zqxm_expl_box {
-            display: block;
-            color: #e3e3e3;
         }
 
-        .zqxm_expl_hdr {
-            font-weight: 600;
+        .mapa-header-bar {
+            display: flex;
+            width: 100%;
+            height: 60px;
+        }
+
+        .mhb-green {
+            width: 10%; 
+            min-width: 60px;
+            background-color: #2A9669; 
+        }
+
+        .mhb-black {
+            flex-grow: 1;
+            background-color: #000000;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
+            padding-left: 20px;
         }
 
-        .zqxm_opt_node.zqxm_valid .zqxm_expl_hdr { color: #81c995; }
-        .zqxm_opt_node.zqxm_invalid .zqxm_expl_hdr { color: #f28b82; }
-
-        /* Pista */
-        .zqxm_help_area {
-            margin-bottom: 40px;
-        }
-
-        .zqxm_help_trig {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
+        .mhb-black h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
             font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            color: #e3e3e3;
         }
 
-        .zqxm_help_pane {
-            display: none;
-            background-color: #1e1f20;
-            padding: 16px;
-            border-radius: 12px;
-            margin-top: 12px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .zqxm_help_pane.zqxm_revealed {
-            display: flex;
-        }
-
-        /* Botones de Navegación */
-        .zqxm_ctrls {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 15px;
+        /* =========================================
+           FOOTER / PIE DE PÁGINA (100% ANCHO LADO A LADO)
+           ========================================= */
+        .vanglare-footer {
+            width: 100%; 
             margin-top: auto;
+            display: flex;
+            flex-direction: column;
         }
 
-        .zqxm_btn_base {
-            border: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .zqxm_btn_rtn {
-            background: none;
-            color: #a8c7fa;
-            padding: 10px;
-        }
-
-        .zqxm_btn_rtn:hover {
-            color: #d3e3fd;
-        }
-
-        .zqxm_btn_adv {
-            background-color: #a8c7fa;
-            color: #041e49;
-            padding: 12px 24px;
-            border-radius: 24px; 
-        }
-
-        .zqxm_btn_adv:hover {
-            background-color: #d3e3fd;
-        }
-        
-        .zqxm_btn_adv:disabled {
-            background-color: #444746;
-            color: #1e1f20;
-            cursor: not-allowed;
-        }
-
-        /* Pantalla de Resultados */
-        .zqxm_out_wrap {
-            display: none;
+        .footer-texto-bar {
+            background-color: #000000;
             text-align: center;
-            padding: 40px 20px;
+            padding: 15px 0; 
+            width: 100%;
         }
 
-        .zqxm_out_val {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #81c995;
-            margin: 20px 0;
+        .footer-texto-bar p {
+            color: #ffffff;
+            margin: 0;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .zqxm_wrap svg { width: 20px; height: 20px; fill: currentColor; }
+        .footer-imagen-bar {
+            width: 100%;
+            display: block;
+        }
+
+        .footer-imagen-bar img {
+            width: 100%; /* La imagen se estirará de extremo a extremo */
+            height: 150px; /* <--- ALTURA FIJA PARA QUE NO SE HAGA GIGANTE */
+            display: block; 
+            object-fit: cover; /* <--- RECORTA LA IMAGEN SIN DEFORMARLA */
+            object-position: center; /* Centra el recorte */
+        }
 
 
+        /* =========================================
+           MEDIA QUERIES (MÓVIL Y RESPONSIVIDAD)
+           ========================================= */
+        @media (max-width: 768px) {
+            .navbar-custom { padding: 15px 5%; }
+            .logo-text { font-size: 22px; letter-spacing: 12px; padding-left: 12px; }
+            
+            .contenido-centrado { padding: 15px 5%; }
+            .tarjetas-container { padding: 20px; }
+            .flip-card-custom { min-height: 350px; }
+            
+            /* Móvil para el diseño Ticket */
+            .slc-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 20px;
+            }
+            .slc-body {
+                flex-direction: column;
+                height: auto;
+            }
+            .slc-body img {
+                width: 100%;
+                height: 200px;
+            }
+            .slc-content {
+                width: 100%;
+                padding: 20px 20px 50px 20px; 
+            }
 
+            /* Ajustes Mapa Móvil */
+            .mapa-iframe-wrapper {
+                height: 300px; 
+            }
+            .mhb-black h2 {
+                font-size: 1.2rem;
+            }
+            .mhb-green {
+                width: 15%;
+            }
 
-
-
-
-
-
- 
-.btn-dirigir {
-  font-family: inherit;
-  font-size: 20px;
-  background: royalblue;
-  color: white;
-  padding: 0.7em 1em;
-  padding-left: 0.9em;
-  display: flex;
-  align-items: center;
-  border: none;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.btn-dirigir span {
-  display: block;
-  margin-left: 0.3em;
-  transition: all 0.3s ease-in-out;
-}
-
-.btn-dirigir svg {
-  display: block;
-  transform-origin: center center;
-  transition: transform 0.3s ease-in-out;
-}
-
-.btn-dirigir:hover .dirigir-svg-inner {
-  animation: fly-dirigir 0.6s ease-in-out infinite alternate;
-}
-
-.btn-dirigir:hover svg {
-  transform: translateX(1.2em) rotate(45deg) scale(1.1);
-}
-
-.btn-dirigir:hover span {
-  transform: translateX(5em);
-}
-
-.btn-dirigir:active {
-  transform: scale(0.95);
-}
-
-@keyframes fly-dirigir {
-  from {
-    transform: translateY(0.1em);
-  }
-
-  to {
-    transform: translateY(-0.1em);
-  }
-}
-
-
-
-
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; }
-
-  /* Contenedor Principal Adaptable */
-  .galeria-maestra {
-    width: 95%;
-    max-width: 1200px;
-    position: relative;
-    margin: 40px auto;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  }
-
-  /* Items del Slider */
-  .panel-foto {
-    display: none;
-    width: 100%;
-  }
-
-  .img-fluida {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9; 
-    object-fit: cover;
-    display: block;
-  }
-
-
-  .flecha-izq, .flecha-der {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    padding: 20px;
-    color: white;
-    font-weight: bold;
-    font-size: 24px;
-    transition: 0.3s ease;
-    user-select: none;
-    background-color: rgba(0,0,0,0.3);
-    text-decoration: none;
-    border-radius: 50%;
-    margin: 0 15px;
-  }
-
-  .flecha-der { right: 0; }
-  .flecha-izq:hover, .flecha-der:hover { background-color: rgba(0,0,0,0.8); }
-
-  .etiqueta-texto {
-    color: #ffffff;
-    font-size: 1.1rem;
-    padding: 15px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
-  }
-
-  .indice-visual {
-    color: #f2f2f2;
-    font-size: 14px;
-    padding: 12px;
-    position: absolute;
-    top: 0;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-  }
-
-  /* Paginación (Puntos) */
-  .zona-puntos {
-    text-align: center;
-    padding: 20px;
-  }
-
-  .indicador-bolita {
-    cursor: pointer;
-    height: 12px;
-    width: 12px;
-    margin: 0 5px;
-    background-color: #ccc;
-    border-radius: 50%;
-    display: inline-block;
-    transition: all 0.3s ease;
-  }
-
-  .bolita-activa, .indicador-bolita:hover {
-    background-color: #333;
-    transform: scale(1.3);
-  }
-
-  /* Animación de Transición */
-  .efecto-suave {
-    animation: aparecer 0.8s ease-in-out;
-  }
-
-  @keyframes aparecer {
-    from { opacity: 0.5; filter: blur(2px); }
-    to { opacity: 1; filter: blur(0); }
-  }
-
-  @media screen and (max-width: 768px) {
-    .galeria-maestra { width: 100%; border-radius: 0; margin: 0; }
-    .flecha-izq, .flecha-der { padding: 12px; font-size: 18px; }
-    .etiqueta-texto { font-size: 0.9rem; }
-    .img-fluida { aspect-ratio: 4 / 3; }
-  }
-
+            /* Ajustes Footer Móvil */
+            .footer-texto-bar p {
+                font-size: 0.8rem;
+            }
+            .footer-imagen-bar img {
+                height: 100px; /* Un poco más delgado en celular */
+            }
+        }
     </style>
 </head>
 <body>
-<div id="mySidenav" class="sidenavIA">
-  <a href="javascript:void(0)" class="closebtnIA" onclick="closeNav()">×</a>
-  
-  <button class="btn-simulador" onclick="openPage('Home', this)" id="defaultOpen">
-    <span class="texto-base"> INICIO </span>
-    <span aria-hidden="true" class="texto-efecto" data-text="INICIO"> INICIO </span>
-  </button>
-  
-  <button class="btn-simulador" onclick="openPage('News', this)">
-    <span class="texto-base"> Carreras </span>
-    <span aria-hidden="true" class="texto-efecto" data-text="CARRERAS"> Carreras </span>
-  </button>
 
-  <button class="btn-simulador" onclick="openPage('Contact', this)">
-    <span class="texto-base"> Educación </span>
-    <span aria-hidden="true" class="texto-efecto" data-text="EDUCACIÓN"> Educación </span>
-  </button>
+<div class="vanglare-wrapper">
 
- <button class="btn-simulador" onclick="openPage('Juego', this)">
-    <span class="texto-base"> Juego </span>
-    <span aria-hidden="true" class="texto-efecto" data-text="JUEGO"> Juego </span>
-  </button>
-</div>
-
-<header class="top-header">
-    <div class="logo">VANGLAR</div>
-    <button class="btnAS" onclick="openNav()">
-        <span class="iconAS">
-            <svg viewBox="0 0 175 80" width="40" height="40">
-                <rect width="80" height="15" fill="#f0f0f0" rx="10"></rect>
-                <rect y="30" width="80" height="15" fill="#f0f0f0" rx="10"></rect>
-                <rect y="60" width="80" height="15" fill="#f0f0f0" rx="10"></rect>
-            </svg>
-        </span>
-        <span class="textAS">MENÚ</span>
-    </button>
-</header>
-<div class="teal-stripe"></div>
-
-
-<div id="Home" class="tabcontent"> 
-    <div class="container mt-4">
-        <div class="alert alert-danger alert-dismissible fade show">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>¡Nota!</strong> Página web en desarrollo.
+    <div id="SeccionLanding">
+        <div class="vanglare-logo-box">
+            <img src="https://i.pinimg.com/736x/c6/09/4c/c6094c07ba70113e1adcc279d1c7cd2a.jpg" alt="VANGLARE LOGO">
         </div>
+        <button class="vanglare-btn-entrar" onclick="entrarAlApp()">
+            COMENZAR
+        </button>
     </div>
 
-<BR>
-
-<div class="galeria-maestra">
-
-  <div class="panel-foto efecto-suave">
-    <div class="indice-visual">1 / 3</div>
-    <img src="https://i.pinimg.com/736x/54/33/65/5433656c13684fe59bd87a1082b353bf.jpg" class="img-fluida">
-    <div class="etiqueta-texto">Conferencia</div>
-  </div>
-
-  <div class="panel-foto efecto-suave">
-    <div class="indice-visual">2 / 3</div>
-    <img src="https://i.pinimg.com/736x/5b/c0/9c/5bc09c28ffb77b87f597ad15eee7924a.jpg" class="img-fluida">
-    <div class="etiqueta-texto">Conferencia</div>
-  </div>
-
-  <div class="panel-foto efecto-suave">
-    <div class="indice-visual">3 / 3</div>
-    <img src="https://i.pinimg.com/736x/ac/ea/3a/acea3af1ca791aaa6679c56c5be6e231.jpg" class="img-fluida">
-    <div class="etiqueta-texto">Conferencia</div>
-  </div>
-
-  <a class="flecha-izq" onclick="cambiarSlide(-1)">❮</a>
-  <a class="flecha-der" onclick="cambiarSlide(1)">❯</a>
-
-</div>
-
-<div class="zona-puntos">
-  <span class="indicador-bolita" onclick="slideActual(1)"></span> 
-  <span class="indicador-bolita" onclick="slideActual(2)"></span> 
-  <span class="indicador-bolita" onclick="slideActual(3)"></span> 
-</div>
-<BR>
-    <section class="hero-container">
-        <div class="covers-wrapper">
-            <div class="cover-box"><img src="https://store-images.s-microsoft.com/image/apps.51609.14406935353956462.3e5ea973-8477-49b6-97a0-33b4d669d86c.56a5977b-8285-4894-8266-7f400f59dcbd" alt="MSFS 2024"></div>
-            <div class="cover-box"><img src="https://store-images.s-microsoft.com/image/apps.5176.14225646405929875.ed2b05a2-f9fd-4a33-b808-807366c017bf.ec671c43-7121-4f72-b10a-85e5c4b83540" alt="MSFS Deluxe"></div>
-        </div>
-        <div class="black-info-block">
-            <div class="description-text">
-                <p><strong>Microsoft Flight Simulator 2024</strong> se define como un ecosistema de simulación de alta fidelidad que trasciende el entretenimiento para consolidarse como una herramienta pedagógica de vanguardia. Esta iteración utiliza un "Gemelo Digital" de la Tierra, integrando datos geoespaciales masivos y física de fluidos avanzada para recrear entornos operativos con una precisión técnica sin precedentes.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="split-section">
-        <div class="image-half">
-            <img src="https://i.pinimg.com/736x/d6/2a/6e/d62a6e11a324baaf29588ddecbab6c44.jpg" alt="Simuladores">
-        </div>
-        <div class="text-half">
-            <h2>SIMULADORES<br>DE<br>VUELO<br>A LA<br>VANGUARDIA<br>DE LA<br>TECNOLOGÍA<br>EDUCATIVA<br>Y EL<br>DESARROLLO<br>INSTITUCIONAL</h2>
-        </div>
-    </section>
-
-      <section class="tools-section">
-        <div class="vuela-proposito-bar">VUELA CON PROPÓSITO</div>
-
-        <div class="tool-item">
-            <div class="airplane-top">
-                <img src="https://i.pinimg.com/736x/43/7e/47/437e479f78709ab6f572c2c848239e38.jpg" alt="Avión">
-            </div>
-            <div class="info-bar-bottom">
-                <div class="tool-title">PRESENTACIÓN</div>
-                <a href="https://canva.link/5tddresdll5cw9o" target="_blank"><button class="btn-dirigir">
-  <div class="dirigir-svg-outer">
-    <div class="dirigir-svg-inner">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="24"
-        height="24"
-      >
-        <path fill="none" d="M0 0h24v24H0z"></path>
-        <path
-          fill="currentColor"
-          d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-        ></path>
-      </svg>
-    </div>
-  </div>
-  <span>Dirigir</span>
-</button></a>
-            </div>
-        </div>
-
-        <div class="tool-item">
-            <div class="airplane-top">
-                <img src="https://i.pinimg.com/736x/75/80/13/758013ac3dac0c2b39f6f6fbfca7bbbe.jpg" alt="Avión">
-            </div>
-            <div class="info-bar-bottom">
-                <div class="tool-title">DOCUMENTACIÓN</div>
-                <a href="https://docs.google.com/document/d/1CLBmi5Ur5HBICq2xEMVqTfxlSEkEo5J-QT972qyQsik/edit?usp=sharing" target="_blank"><button class="btn-dirigir">
-  <div class="dirigir-svg-outer">
-    <div class="dirigir-svg-inner">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="24"
-        height="24"
-      >
-        <path fill="none" d="M0 0h24v24H0z"></path>
-        <path
-          fill="currentColor"
-          d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-        ></path>
-      </svg>
-    </div>
-  </div>
-  <span>Dirigir</span>
-</button></a>
-            </div>
-        </div>
-
-        <div class="tool-item">
-            <div class="airplane-top">
-                <img src="https://statics.uniradiobaja.com/2025/03/67c7971ab5d6b.jpg" alt="Avión">
-            </div>
-            <div class="info-bar-bottom">
-                <div class="tool-title">UTT</div>
-                <a href="https://uttijuana.edu.mx/" target="_blank"><button class="btn-dirigir">
-  <div class="dirigir-svg-outer">
-    <div class="dirigir-svg-inner">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="24"
-        height="24"
-      >
-        <path fill="none" d="M0 0h24v24H0z"></path>
-        <path
-          fill="currentColor"
-          d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-        ></path>
-      </svg>
-    </div>
-  </div>
-  <span>Dirigir</span>
-</button></a>
-            </div>
-        </div>
-    </section>
-
-    <section class="f1-map-container">
-        <div class="f2-map-wrapper">
-            <iframe src="https://maps.google.com/maps?q=UTT%20Tijuana&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-        <div class="f3-map-label"><h3>Google Maps</h3></div>
-        <div class="f4-rights-bar">TODOS LOS DERECHOS RESERVADOS</div>
-        <div class="f5-footer-black"></div>
-    </section>
-</div>
-
-<div id="News" class="tabcontent">
-    <header class="seccion-header">
-        <h1>Implementaciones Tecnológicas En Las<br>Carreras</h1>
-    </header>
-
-    <main class="q8-wrap">
-        <article class="x7-box">
-            <div class="p3-pic"><img src="https://uttijuana.edu.mx/wp-content/uploads/2025/02/03-AERONAUTICA-EN-MANUFACTURA-TSU-Manufactura-Aeronautica.jpg" alt="Aeronáutica"></div>
-            <div class="l5-line"></div>
-            <div class="t2-txt">
-                <h2>Manufactura Aeronáutica</h2>
-                <p>Simulación de la aerodinámica, validación de modelos de vuelo, estudio de sistemas de aeronaves y práctica de procedimientos de emergencia.</p>
-            </div>
-        </article>
-
-        <article class="x7-box">
-            <div class="p3-pic">
-                <img src="https://uttijuana.edu.mx/wp-content/uploads/2026/02/ING.-ELECTROMOVILIDAD.jpg" alt="Estudiantes de Electrónica">
-            </div>
-            <div class="l5-line"></div>
-            <div class="t2-txt">
-                <h2>Electrónica</h2>
-                <p>Análisis de la instrumentación de cabina (Glass Cockpit, GPS, VOR), diagnóstico simulado de fallas en sistemas eléctricos y el funcionamiento del FMS (Flight Management System).</p>
-            </div>
-        </article>
-
-        <article class="x7-box">
-            <div class="p3-pic">
-                <img src="https://uttijuana.edu.mx/wp-content/uploads/2025/02/07-LOGISTICA-INTERNACIONAL.jpg" alt="Estudiantes de Logística">
-            </div>
-            <div class="l5-line"></div>
-            <div class="t2-txt">
-                <h2>Operaciones Logísticas y Comercio Exterior</h2>
-                <p>Evaluación de la infraestructura de hubs logísticos globales, cálculo de la viabilidad económica de rutas aéreas (costo de combustible, tiempo de tránsito) y gestión de riesgos geográficos.</p>
-            </div>
-        </article>
-
-        <article class="x7-box">
-            <div class="p3-pic">
-                <img src="https://uttijuana.edu.mx/wp-content/uploads/2025/02/04.2-MECATRONICA-TSU-Sistemas-de-Manufactura-Flexible.jpg" alt="Estudiante operando brazo robótico">
-            </div>
-            <div class="l5-line"></div>
-            <div class="t2-txt">
-                <h2>Mecatrónica</h2>
-                <p>Análisis de la instrumentación de cabina (Glass Cockpit, GPS, VOR), diagnóstico simulado de fallas en sistemas eléctricos y el funcionamiento del FMS (Flight Management System).</p>
-            </div>
-        </article>
-
-    </main>
-
-    <br>
-
-    <div class="z8-wrapper">
-  
-  <div id="demo" class="carousel slide" data-ride="carousel">
-    
-    <ul class="carousel-indicators">
-      <li data-target="#demo" data-slide-to="0" class="active"></li>
-      <li data-target="#demo" data-slide-to="1"></li>
-      <li data-target="#demo" data-slide-to="2"></li>
-        <li data-target="#demo" data-slide-to="3"></li>
-    </ul>
-    
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="https://i.pinimg.com/736x/ca/97/66/ca9766ea1e6f45e3dfd11be72da53210.jpg" alt="Imagen 1" class="r4-carousel-img">
-      </div>
-      <div class="carousel-item">
-        <img src="https://i.pinimg.com/736x/d6/2a/6e/d62a6e11a324baaf29588ddecbab6c44.jpg" alt="Imagen 2" class="r4-carousel-img">
-      </div>
-      <div class="carousel-item">
-        <img src="https://i.pinimg.com/736x/bb/e8/6b/bbe86baf443d1a48b442bbf422927ff5.jpg" alt="Imagen 3" class="r4-carousel-img">
-      </div>
-            <div class="carousel-item">
-        <img src="https://i.pinimg.com/736x/b5/c7/81/b5c7817d13b7e8df4b954af8664de09e.jpg" alt="Imagen 4" class="r4-carousel-img">
-      </div>
-    </div>
-    
-    <a class="carousel-control-prev" href="#demo" data-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </a>
-    <a class="carousel-control-next" href="#demo" data-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </a>
-  </div>
-
-  <div class="m9-stripe"></div>
-
-  <div class="k2-footer-info">
-    <p>
-      El simulador de vuelo se consolida como una herramienta educativa transformadora que trasciende el software para priorizar la interacción humana, permitiendo al cuerpo docente convertir la enseñanza en un laboratorio de experimentación en tiempo real. Su impacto radica en la capacidad de recrear fenómenos aeronáuticos complejos y situaciones de emergencia con total seguridad, lo que no solo optimiza el rigor de las evaluaciones, sino que fortalece el vínculo académico mediante una instrucción personalizada y basada en datos. En conclusión, el simulador actúa como un catalizador de la cultura institucional, elevando la formación técnica a través de un entorno colaborativo que garantiza un aprendizaje práctico y profundamente integrado.
-    </p>
-  </div>
-
-</div>
-</div>
-
-
-
-
-
-<div id="Contact" class="tabcontent">
-
-
-
-
-
-
-
-<div class="marco-global">
-
-<h2 class="titulo-seccion">Innovación Educativa</h2>
-<hr>
-
-<div class="contenedor-selectores" id="panelFiltros">
-  <button class="selector-accion estado-seleccionado" onclick="aplicarFiltro('todo')"> Todo</button>
-  <button class="selector-accion" onclick="aplicarFiltro('solar')"> Carrito Solar</button>
-  <button class="selector-accion" onclick="aplicarFiltro('maquinaria')"> CNC y Fresadora</button>
-  <button class="selector-accion" onclick="aplicarFiltro('digital')"> Diseño Por Computadora</button>
-
-<button class="selector-accion" onclick="aplicarFiltro('simulador')"> Simulador De Vuelo</button>
-</div>
-
-<br>
-  <div class="alert alert-primary alert-dismissible fade show">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>Nota!</strong> Oprime las imágenes para hacer zoom.
-  </div>
-<br>
-<div class="tablero-proyectos">
-  
-  <div class="pieza-galeria solar">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/c1/bb/4c/c1bb4c11bbeed49e74dd45041c58f3e7.jpg" alt="Primer contacto con la innovación" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Primer contacto con la innovación</h4>
-      <p>Estudiantes y mentores revisan el prototipo funcional en su entorno de prueba.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria solar">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/79/46/39/7946393622fc8fc5754a346ef5352058.jpg" alt="Ingeniería solar en detalle" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Ingeniería solar en detalle</h4>
-      <p>Un examen minucioso de los paneles solares y el sistema de energía del vehículo.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria solar">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/69/be/22/69be221d022a669cce55b27eef91325f.jpg" alt="Colaboración y aprendizaje en equipo" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Colaboración y aprendizaje</h4>
-      <p>El grupo se reúne en el taller para la puesta en común y la instrucción final del proyecto.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria maquinaria">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/b8/5a/f8/b85af8efac236763d762fbd71fad1dfe.jpg" alt="Precisión mediante Control Numérico" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Precisión mediante CNC</h4>
-      <p>Programación y monitoreo de maquinaria CNC para la fabricación de componentes técnicos.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria maquinaria">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/63/56/bc/6356bce6da000e150648ab460aa1afbd.jpg" alt="Mecanizado de alta velocidad" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Mecanizado de alta velocidad</h4>
-      <p>Ejecución de cortes precisos en bloques de metal mediante el uso de fresas de carburo.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria maquinaria">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/72/ad/61/72ad615d68e852302b4dd9af826f75ad.jpg" alt="Manufactura convencional" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Manufactura convencional</h4>
-      <p>Control manual y supervisión directa del proceso de fresado para el acabado de piezas.</p>
-    </div>
-  </div>
-
-
-
-  <div class="pieza-galeria digital">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/24/cf/1f/24cf1fe54528b9cbcafb4bfa5ce7da8d.jpg" alt="Prototipado Virtual" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Prototipado Virtual</h4>
-      <p>Creación de sólidos precisos para optimizar el uso de material y resistencia mecánica.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria digital">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/42/f3/ab/42f3ab8915d820f07a1fba1a95fde1ac.jpg" alt="Ingeniería Mecánica" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Ingeniería Mecánica CAD</h4>
-      <p>Desarrollo de mecanismos aeronáuticos mediante herramientas de diseño por computadora.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria digital">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/69/b2/9f/69b29feb4f3752d6625f627d3ff1815b.jpg" alt="Planos de Manufactura" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Planos de Manufactura</h4>
-      <p>Traducción del modelo tridimensional a vistas técnicas fundamentales para calidad.</p>
-    </div>
-  </div>
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="pieza-galeria simulador">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/ca/97/66/ca9766ea1e6f45e3dfd11be72da53210.jpg" alt="Operación Básica y Maniobras de Vuelo" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Operación Básica y Maniobras de Vuelo</h4>
-      <p>Estudiantes aprenden los fundamentos del control de aeronaves en diferentes fases, como el despegue y aterrizaje.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria simulador">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/d6/2a/6e/d62a6e11a324baaf29588ddecbab6c44.jpg" alt="Navegación Aérea Avanzada y Cabina" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Navegación Aérea Avanzada y Cabina</h4>
-      <p>Análisis de cartas aéreas digitales y gestión detallada de la aviónica de cabina.</p>
-    </div>
-  </div>
-
-  <div class="pieza-galeria simulador">
-    <div class="envoltura-info">
-      <img src="https://i.pinimg.com/736x/60/9e/14/609e147a6abd5c0a95243b3a882260aa.jpg" alt="Procedimientos de Tráfico Aéreo" class="foto-portada" onclick="lupaImagen(this)">
-      <h4>Procedimientos de Tráfico Aéreo</h4>
-      <p>Práctica de comunicaciones y cumplimiento de rutas de vuelo establecidas en un entorno simulado de pista.</p>
-    </div>
-  </div>
-  
-  
-  
-  
-
-</div>
-
-</div>
-
-<div id="ventanaEmergente" class="pantalla-zoom">
-  <span class="cerrar-visor" onclick="bajarLupa()">×</span>
-  <img class="imagen-maximizada" id="visorImagen">
-  <div id="visorTexto" class="texto-descripcion"></div>
-</div>
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-<div id="Juego" class="tabcontent">
-   <div class="zqxm_master_container">
+    <div id="InterfazPrincipal" style="display: none;">
         
-        <div class="zqxm_wrap" id="zqxm_main_ui">
+        <header class="navbar-custom">
+            <div class="logo-container">
+                <h1 class="logo-text">VANGLAR</h1>
+            </div>
+            <button class="btn-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <div class="offcanvas offcanvas-end offcanvas-custom text-bg-dark" id="menuLateral">
+            <div class="offcanvas-header border-bottom border-secondary">
+                <h5 class="offcanvas-title" style="letter-spacing: 3px;">MENÚ</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body d-flex flex-column align-items-end">
+                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionInicio'); cerrarMenu()">Inicio</button>
+                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionNoticias'); cerrarMenu()">Novedades</button>
+                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionContacto'); cerrarMenu()">Contacto</button>
+                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionInfo'); cerrarMenu()">Información</button>
+            </div>
+        </div>
+
+        <div id="SeccionInicio" class="vanglare-content-panel" style="display: block;">
             
-            <div class="zqxm_img_box" id="zqxm_img_box">
-                <img id="zqxm_img_tag" src="" alt="Imagen ilustrativa">
-            </div>
+            <div class="main-content-wrapper">
+                
+                <div class="contenido-centrado">
+                    
+                    <div id="demoCarousel" class="carousel slide carousel-redondeado" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#demoCarousel" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#demoCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#demoCarousel" data-bs-slide-to="2"></button>
+                        </div>
+                        
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://i.pinimg.com/736x/54/33/65/5433656c13684fe59bd87a1082b353bf.jpg" alt="Primera" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://i.pinimg.com/736x/5b/c0/9c/5bc09c28ffb77b87f597ad15eee7924a.jpg" alt="Segunda" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://i.pinimg.com/736x/ac/ea/3a/acea3af1ca791aaa6679c56c5be6e231.jpg" alt="Tercera" class="d-block w-100">
+                            </div>
+                        </div>
+                        
+                        <button class="carousel-control-prev" type="button" data-bs-target="#demoCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#demoCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
 
-            <div class="zqxm_q_hdr">
-                <span id="zqxm_q_idx">1.</span>
-                <span id="zqxm_q_str">Cargando pregunta...</span>
-            </div>
+                    <div class="tarjetas-container">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="flip-card-custom" onclick="alternarTarjeta('tarjeta1')">
+                                    <div id="tarjeta1-icono" class="vista-icono">
+                                        <img src="https://i.pinimg.com/736x/84/2c/dc/842cdc14689bf8667bfedf81b6618190.jpg" alt="Tortuga">
+                                    </div>
+                                    <div id="tarjeta1-info" class="vista-info">
+                                        <img src="https://i.pinimg.com/736x/b8/5a/f8/b85af8efac236763d762fbd71fad1dfe.jpg" alt="Imagen Trámite" class="vista-info-img">
+                                        <div class="vista-info-texto">
+                                            <h3>TRAMITES</h3>
+                                            <p>En VANGLARE, entendemos que el valor de una empresa se mide por el impacto positivo que deja en la gente.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="zqxm_opt_grp" id="zqxm_opt_grp">
-                </div>
+                            <div class="col-md-4">
+                                <div class="flip-card-custom" onclick="alternarTarjeta('tarjeta2')">
+                                    <div id="tarjeta2-icono" class="vista-icono">
+                                        <img src="https://i.pinimg.com/1200x/16/fc/a6/16fca6240d02ac9c2fe850ad8a1a143d.jpg" alt="Colibrí">
+                                    </div>
+                                    <div id="tarjeta2-info" class="vista-info">
+                                        <img src="https://i.pinimg.com/736x/b8/5a/f8/b85af8efac236763d762fbd71fad1dfe.jpg" alt="Imagen Trámite" class="vista-info-img">
+                                        <div class="vista-info-texto">
+                                            <h3>TRAMITES</h3>
+                                            <p>En VANGLARE, entendemos que el valor de una empresa se mide por el impacto positivo que deja en la gente.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="zqxm_help_area">
-                <div class="zqxm_help_trig" onclick="toggleHint_zqxm()">
-                    Mostrar pista
-                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                </div>
-                <div class="zqxm_help_pane" id="zqxm_help_pane">
-                    <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
-                    <span id="zqxm_help_str">Texto de la pista aquí.</span>
-                </div>
-            </div>
+                            <div class="col-md-4">
+                                <div class="flip-card-custom" onclick="alternarTarjeta('tarjeta3')">
+                                    <div id="tarjeta3-icono" class="vista-icono">
+                                        <img src="https://i.pinimg.com/1200x/13/4d/db/134ddb774258d26a7baeea8210c98bfd.jpg" alt="Tucán">
+                                    </div>
+                                    <div id="tarjeta3-info" class="vista-info">
+                                        <img src="https://i.pinimg.com/736x/b8/5a/f8/b85af8efac236763d762fbd71fad1dfe.jpg" alt="Imagen Trámite" class="vista-info-img">
+                                        <div class="vista-info-texto">
+                                            <h3>TRAMITES</h3>
+                                            <p>En VANGLARE, entendemos que el valor de una empresa se mide por el impacto positivo que deja en la gente.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="zqxm_ctrls">
-                <button class="zqxm_btn_base zqxm_btn_rtn" id="zqxm_btn_rtn" onclick="prevQuestion_zqxm()" style="display: none;">Atrás</button>
-                <button class="zqxm_btn_base zqxm_btn_adv" id="zqxm_btn_adv" onclick="nextQuestion_zqxm()" disabled>Siguiente</button>
+                    <div class="secciones-lista-container">
+                        <div class="seccion-list-card">
+                            <div class="slc-header">
+                                <h3>SIMULADO DE VUELO</h3>
+                                <button type="button" class="uiverse-btn">
+                                    <div class="uiverse-btn-bg">
+                                        <svg width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                                            <path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+                                        </svg>
+                                    </div>
+                                    <p>IR</p>
+                                </button>
+                            </div>
+                            
+                            <div class="slc-divider-container">
+                                <div class="slc-dashed-line"></div>
+                            </div>
+
+                            <div class="slc-body">
+                                <img src="https://i.pinimg.com/736x/5b/c0/9c/5bc09c28ffb77b87f597ad15eee7924a.jpg" alt="Simulador Vuelo">
+                                <div class="slc-content">
+                                    <p>En VANGLARE, entendemos que el valor de una empresa se mide por el impacto positivo que deja en la gente.</p>
+                                    <p>Hola como estan.</p>
+                                    <div class="barcode-ticket"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="seccion-list-card">
+                            <div class="slc-header">
+                                <h3>CARRERAS UTT</h3>
+                                <button type="button" class="uiverse-btn">
+                                    <div class="uiverse-btn-bg">
+                                        <svg width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                                            <path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+                                        </svg>
+                                    </div>
+                                    <p>IR</p>
+                                </button>
+                            </div>
+
+                            <div class="slc-divider-container">
+                                <div class="slc-dashed-line"></div>
+                            </div>
+
+                            <div class="slc-body">
+                                <img src="https://i.pinimg.com/736x/ac/ea/3a/acea3af1ca791aaa6679c56c5be6e231.jpg" alt="Carreras UTT">
+                                <div class="slc-content">
+                                    <p>En VANGLARE, entendemos que el valor de una empresa se mide por el impacto positivo que deja en la gente.</p>
+                                    <p>Hola como estan.</p>
+                                    <div class="barcode-ticket"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="seccion-mapa-container">
+                        <div class="mapa-iframe-wrapper">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3616.291848820051!2d-116.82541499999999!3d32.460949!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80d93e743f2e3bd7%3A0xbf19e069ae61d678!2sUniversidad%20Tecnol%C3%B3gica%20de%20Tijuana!5e1!3m2!1ses-419!2smx!4v1776891893641!5m2!1ses-419!2smx" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                        <div class="mapa-header-bar">
+                            <div class="mhb-green"></div>
+                            <div class="mhb-black">
+                                <h2>GOOGLE MAPS</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <footer class="vanglare-footer">
+                    <div class="footer-texto-bar">
+                        <p>Todos Los Derechos Reservados</p>
+                    </div>
+                    <div class="footer-imagen-bar">
+                        <img src="https://i.pinimg.com/1200x/c4/68/bd/c468bd6a22eb40b3854e5db55e881791.jpg" alt="Imagen Cierre Derechos Reservados">
+                    </div>
+                </footer>
+
+            </div> 
+        </div>
+
+        <div id="SeccionNoticias" class="vanglare-content-panel">
+            <div class="contenido-centrado">
+                <h2>Novedades</h2>
+                <p>Aquí aparecerán las últimas noticias.</p>
             </div>
         </div>
 
-        <div class="zqxm_wrap zqxm_out_wrap" id="zqxm_out_ui">
-            <h2>¡Cuestionario Finalizado!</h2>
-            <p>Has completado todas las preguntas. Aquí está tu resultado:</p>
-            <div class="zqxm_out_val" id="zqxm_out_txt">0 / 10</div>
-            <button class="zqxm_btn_base zqxm_btn_adv" onclick="location.reload()">Jugar de nuevo</button>
+        <div id="SeccionContacto" class="vanglare-content-panel">
+            <div class="contenido-centrado">
+                <h2>Contacto</h2>
+                <p>Ponte en contacto con nosotros aquí.</p>
+            </div>
         </div>
 
-    </div> 
+        <div id="SeccionInfo" class="vanglare-content-panel">
+            <div class="contenido-centrado">
+                <h2>Datos Personales</h2>
+                <p>Detalles técnicos y de sistema.</p>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-function openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
-}
-
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-}
-
-
-function openPage(pageName,elmnt,color) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].style.backgroundColor = "";
-  }
-  document.getElementById(pageName).style.display = "block";
-  elmnt.style.backgroundColor = color;
-}
-
-document.getElementById("defaultOpen").click();
-
-
-
-
-
-
-aplicarFiltro("todo")
-
-function aplicarFiltro(cat) {
-  var x, i;
-  x = document.getElementsByClassName("pieza-galeria");
-  if (cat == "todo") cat = "";
-  for (i = 0; i < x.length; i++) {
-    borrarClase(x[i], "activar-visibilidad");
-    if (x[i].className.indexOf(cat) > -1) agregarClase(x[i], "activar-visibilidad");
-  }
-}
-
-function agregarClase(elemento, nombre) {
-  var i, arr1, arr2;
-  arr1 = elemento.className.split(" ");
-  arr2 = nombre.split(" ");
-  for (i = 0; i < arr2.length; i++) {
-    if (arr1.indexOf(arr2[i]) == -1) {elemento.className += " " + arr2[i];}
-  }
-}
-
-function borrarClase(elemento, nombre) {
-  var i, arr1, arr2;
-  arr1 = elemento.className.split(" ");
-  arr2 = nombre.split(" ");
-  for (i = 0; i < arr2.length; i++) {
-    while (arr1.indexOf(arr2[i]) > -1) {
-      arr1.splice(arr1.indexOf(arr2[i]), 1);     
+    function entrarAlApp() {
+        document.getElementById('SeccionLanding').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('SeccionLanding').style.display = 'none';
+            document.getElementById('InterfazPrincipal').style.display = 'flex';
+            cambiarVista('SeccionInicio');
+        }, 500);
     }
-  }
-  elemento.className = arr1.join(" ");
-}
 
-var modal = document.getElementById("ventanaEmergente");
-var modalImg = document.getElementById("visorImagen");
-var captionText = document.getElementById("visorTexto");
-
-function lupaImagen(elemento){
-  modal.style.display = "block";
-  modalImg.src = elemento.src;
-  captionText.innerHTML = elemento.alt;
-}
-
-function bajarLupa() { 
-  modal.style.display = "none";
-}
-
-
-var zonaBotones = document.getElementById("panelFiltros");
-var botones = zonaBotones.getElementsByClassName("selector-accion");
-for (var i = 0; i < botones.length; i++) {
-  botones[i].addEventListener("click", function(){
-    var actual = document.getElementsByClassName("estado-seleccionado");
-    actual[0].className = actual[0].className.replace(" estado-seleccionado", "");
-    this.className += " estado-seleccionado";
-  });
-}
-
-
-
-
-
-        const questions_zqxm = [
-            {
-                question: "¿Cuál es la fuerza que se opone directamente al peso de un avión para mantenerlo en el aire?",
-                options: ["Resistencia", "Gravedad", "Sustentación", "Empuje"],
-                correctIndex: 2,
-                explanation: "La sustentación es la fuerza aerodinámica generada por las alas que empuja el avión hacia arriba, contrarrestando su peso.",
-                hint: "Es una fuerza generada principalmente por la forma (perfil aerodinámico) de las alas.",
-                image: "" 
-            },
-            {
-                question: "¿Qué parte del avión se utiliza para controlar el movimiento de 'alabeo' (inclinar el avión hacia los lados)?",
-                options: ["Timón De Dirección", "Elevadores", "Alerones", "Flaps"],
-                correctIndex: 2,
-                explanation: "Los alerones se mueven en direcciones opuestas para aumentar la sustentación en un ala y disminuirla en la otra, provocando el alabeo.",
-                hint: "Se encuentran en el borde de salida de las alas y se mueven de forma asimétrica.",
-                image: ""
-            },
-            {
-                question: "¿A qué se refiere el término 'guiñada' en una aeronave?",
-                options: ["Ángulo de inclinación", "Subir y bajar nariz", "Aumento de velocidad crucero", "Giro de la nariz de lado a lado"],
-                correctIndex: 3,
-                explanation: "La guiñada es el movimiento del avión alrededor de su eje vertical (girar la nariz hacia la izquierda o la derecha).",
-                hint: "Está relacionado con el movimiento horizontal de la nariz del avión, controlado por el timón de dirección.",
-                image: ""
-            },
-            {
-                question: "¿Quiénes son acreditados históricamente con realizar el primer vuelo controlado y motorizado en 1903?",
-                options: ["Los hermanos Wright", "Leonardo da Vinci", "Amelia Earhart", "Charles Lindbergh"],
-                correctIndex: 0,
-                explanation: "Orville y Wilbur Wright lograron este hito histórico el 17 de diciembre de 1903 en Kitty Hawk, Carolina del Norte, con su avión 'Wright Flyer'.",
-                hint: "Eran dos hermanos estadounidenses que antes de construir aviones tenían una tienda de bicicletas.",
-                image: ""
-            },
-            {
-                question: "¿Cuál es la función principal de los 'Flaps' en las alas de un avión?",
-                options: ["Aumentar la velocidad máxima del avión", "Incrementar la sustentación a bajas velocidades", "Servir como tanques auxiliares de combustible", "Enfriar los motores durante el vuelo"],
-                correctIndex: 1,
-                explanation: "Al desplegarse, los flaps aumentan la curvatura del ala, permitiendo volar de forma segura a velocidades menores.",
-                hint: "Se utilizan mayormente durante las fases de aproximación y aterrizaje.",
-                image: "" 
-            },
-            {
-                question: "¿Cuál es el propósito principal de la llamada 'caja negra' en un avión?",
-                options: ["Guardar el equipaje especial de la tripulación", "Registrar datos técnicos de vuelo y comunicaciones de la cabina", "Controlar electrónicamente el tren de aterrizaje", "Almacenar combustible de emergencia"],
-                correctIndex: 1,
-                explanation: "Las cajas negras graban el audio de la cabina y los datos de los sensores del avión para ayudar en las investigaciones en caso de incidentes.",
-                hint: "Ayuda a los investigadores a saber exactamente qué pasó durante un vuelo.",
-                image: ""
-            },
-            {
-                question: "¿Cómo se llama la zona del avión desde donde los pilotos controlan la aeronave?",
-                options: ["Cabina de pasajeros", "Bodega de carga", "Cabina de mando (Cockpit)", "Fuselaje principal"],
-                correctIndex: 2,
-                explanation: "La cabina de mando, o 'cockpit' en inglés, es el espacio en la parte frontal del avión equipado con todos los instrumentos y controles de vuelo.",
-                hint: "Está ubicada en la punta (nariz) del avión y tiene ventanas frontales grandes.",
-                image: ""
-            },
-            {
-                question: "De las cuatro fuerzas fundamentales del vuelo, ¿cuál es la que impulsa al avión hacia adelante?",
-                options: ["Empuje (Thrust)", "Resistencia (Drag)", "Sustentación (Lift)", "Gravedad (Weight)"],
-                correctIndex: 0,
-                explanation: "El empuje es generado por los motores (hélices o turbinas) y es la fuerza que mueve la aeronave hacia adelante a través del aire.",
-                hint: "Es la fuerza creada directamente por la potencia de los motores del avión.",
-                image: ""
-            },
-            {
-                question: "¿Para qué sirve principalmente el radar meteorológico que llevan los aviones comerciales?",
-                options: ["Para que los pasajeros tengan conexión Wi-Fi", "Para detectar tormentas y precipitaciones peligrosas en la ruta", "Para medir la cantidad exacta de combustible en los tanques", "Para comunicarse con los pasajeros por el altavoz"],
-                correctIndex: 1,
-                explanation: "El radar ubicado en la nariz del avión emite ondas para detectar zonas de lluvia intensa o turbulencia severa, permitiendo a los pilotos desviar el avión para un vuelo seguro.",
-                hint: "Funciona rebotando ondas de radio para 'ver' qué hay en el cielo más adelante.",
-                image: ""
-            },
-            {
-                question: "¿Cuál de los siguientes es actualmente el avión comercial de pasajeros más grande del mundo?",
-                options: ["Boeing 737", "Airbus A380", "Concorde", "Cessna 172"],
-                correctIndex: 1,
-                explanation: "El Airbus A380 es un avión de pasajeros gigantesco que cuenta con dos pisos (cubiertas) a lo largo de todo su fuselaje.",
-                hint: "Es fabricado por un consorcio europeo y tiene la característica de poseer dos pisos completos.",
-                image: ""
-            }
-        ];
-
-      
-        let currentQ_zqxm = 0;
-        let score_zqxm = 0;
-        let answers_zqxm = new Array(questions_zqxm.length).fill(null); 
-
-        const el_qNum = document.getElementById('zqxm_q_idx');
-        const el_qText = document.getElementById('zqxm_q_str');
-        const el_optsDiv = document.getElementById('zqxm_opt_grp');
-        const el_hintPane = document.getElementById('zqxm_help_pane');
-        const el_hintText = document.getElementById('zqxm_help_str');
-        const el_btnNext = document.getElementById('zqxm_btn_adv');
-        const el_btnBack = document.getElementById('zqxm_btn_rtn');
-        const el_imgBox = document.getElementById('zqxm_img_box');
-        const el_imgTag = document.getElementById('zqxm_img_tag');
-
-        const letters_zqxm = ['A.', 'B.', 'C.', 'D.'];
-
-        function loadQuestion_zqxm() {
-            const q = questions_zqxm[currentQ_zqxm];
-            
-            el_qNum.textContent = `${currentQ_zqxm + 1}.`;
-            el_qText.textContent = q.question;
-            el_hintText.textContent = q.hint;
-            el_hintPane.classList.remove('zqxm_revealed'); 
-            
-            if (q.image !== "") {
-                el_imgTag.src = q.image;
-                el_imgBox.style.display = "block";
-            } else {
-                el_imgBox.style.display = "none";
-            }
-
-            el_optsDiv.innerHTML = '';
-            q.options.forEach((option, index) => {
-                const optDiv = document.createElement('div');
-                optDiv.className = 'zqxm_opt_node';
-                optDiv.id = `zqxm_opt_${index}`;
-                
-                optDiv.innerHTML = `
-                    <div class="zqxm_opt_core">
-                        <span class="zqxm_opt_char">${letters_zqxm[index]}</span>
-                        <span>${option}</span>
-                    </div>
-                    <div class="zqxm_expl_box">
-                        <div class="zqxm_expl_hdr">
-                            <span class="zqxm_expl_sym"></span>
-                            <span class="zqxm_expl_lbl"></span>
-                        </div>
-                        ${q.explanation}
-                    </div>
-                `;
-
-                if (answers_zqxm[currentQ_zqxm] === null) {
-                    optDiv.onclick = () => selectOption_zqxm(index);
-                }
-
-                el_optsDiv.appendChild(optDiv);
-            });
-
-            el_btnBack.style.display = currentQ_zqxm > 0 ? 'inline-block' : 'none';
-            
-            if (answers_zqxm[currentQ_zqxm] !== null) {
-                showResult_zqxm(answers_zqxm[currentQ_zqxm]);
-                el_btnNext.disabled = false;
-            } else {
-                el_btnNext.disabled = true;
-            }
-
-            if (currentQ_zqxm === questions_zqxm.length - 1) {
-                el_btnNext.textContent = 'Finalizar';
-            } else {
-                el_btnNext.textContent = 'Siguiente';
-            }
+    function cambiarVista(nombreID) {
+        let contenidos = document.getElementsByClassName("vanglare-content-panel");
+        for (let i = 0; i < contenidos.length; i++) {
+            contenidos[i].style.display = "none";
         }
+        document.getElementById(nombreID).style.display = "block";
+    }
 
-        function selectOption_zqxm(selectedIndex) {
-            if (answers_zqxm[currentQ_zqxm] !== null) return;
-
-            const q = questions_zqxm[currentQ_zqxm];
-            const isCorrect = selectedIndex === q.correctIndex;
-            
-            answers_zqxm[currentQ_zqxm] = {
-                selected: selectedIndex,
-                correct: isCorrect
-            };
-
-            if (isCorrect) score_zqxm++;
-
-            showResult_zqxm(answers_zqxm[currentQ_zqxm]);
-            el_btnNext.disabled = false;
+    function cerrarMenu() {
+        let menuLateral = document.getElementById('menuLateral');
+        let offcanvasInstance = bootstrap.Offcanvas.getInstance(menuLateral);
+        if(offcanvasInstance) {
+            offcanvasInstance.hide();
         }
+    }
 
-        function showResult_zqxm(answerData) {
-            const options = document.querySelectorAll('.zqxm_opt_node');
-            
-            options.forEach((opt, idx) => {
-                opt.classList.add('zqxm_locked'); 
-                
-                const lblEl = opt.querySelector('.zqxm_expl_lbl');
-                const symEl = opt.querySelector('.zqxm_expl_sym');
+    function alternarTarjeta(tarjetaId) {
+        const icono = document.getElementById(tarjetaId + '-icono');
+        const info = document.getElementById(tarjetaId + '-info');
 
-                if (idx === answerData.selected) {
-                    if (answerData.correct) {
-                        opt.classList.add('zqxm_valid');
-                        symEl.innerHTML = '✔️';
-                        lblEl.textContent = '¡Así es!';
-                    } else {
-                        opt.classList.add('zqxm_invalid');
-                        symEl.innerHTML = '❌';
-                        lblEl.textContent = 'Incorrecto.';
-                    }
-                }
-            });
+        if (icono.style.display !== 'none') {
+            icono.style.display = 'none';
+            info.style.display = 'flex';
+        } else {
+            icono.style.display = 'flex';
+            info.style.display = 'none';
         }
-
-        function toggleHint_zqxm() {
-            el_hintPane.classList.toggle('zqxm_revealed');
-        }
-
-        function nextQuestion_zqxm() {
-            if (currentQ_zqxm < questions_zqxm.length - 1) {
-                currentQ_zqxm++;
-                loadQuestion_zqxm();
-            } else {
-                showFinal_zqxm();
-            }
-        }
-
-        function prevQuestion_zqxm() {
-            if (currentQ_zqxm > 0) {
-                currentQ_zqxm--;
-                loadQuestion_zqxm();
-            }
-        }
-
-        function showFinal_zqxm() {
-            document.getElementById('zqxm_main_ui').style.display = 'none';
-            document.getElementById('zqxm_out_ui').style.display = 'block';
-            document.getElementById('zqxm_out_txt').textContent = `${score_zqxm} / ${questions_zqxm.length}`;
-        }
-
-    
-        loadQuestion_zqxm();
-
-
-
-
-
-
-
-
-
-        let contadorGlobal = 1;
-gestorDeSlides(contadorGlobal);
-
-function cambiarSlide(paso) {
-  gestorDeSlides(contadorGlobal += paso);
-}
-
-function slideActual(posicion) {
-  gestorDeSlides(contadorGlobal = posicion);
-}
-
-function gestorDeSlides(n) {
-  let vueltas;
-  let elementos = document.getElementsByClassName("panel-foto");
-  let marcadores = document.getElementsByClassName("indicador-bolita");
-  
-  if (n > elementos.length) { contadorGlobal = 1 }    
-  if (n < 1) { contadorGlobal = elementos.length }
-  
-  for (vueltas = 0; vueltas < elementos.length; vueltas++) {
-    elementos[vueltas].style.display = "none";  
-  }
-  
-  for (vueltas = 0; vueltas < marcadores.length; vueltas++) {
-    marcadores[vueltas].className = marcadores[vueltas].className.replace(" bolita-activa", "");
-  }
-  
-  elementos[contadorGlobal-1].style.display = "block";  
-  marcadores[contadorGlobal-1].className += " bolita-activa";
-}
+    }
 </script>
-</script>
+
 </body>
 </html>
