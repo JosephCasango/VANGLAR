@@ -102,11 +102,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 2%; /* Ajustado para dar más ancho */
+            padding: 20px 2%; 
             background-color: transparent;
             position: relative;
             flex-shrink: 0;
-            max-width: 1500px; /* Mismo límite que el contenido central */
+            max-width: 1500px; 
             margin: 0 auto;
             width: 100%;
         }
@@ -157,26 +157,6 @@
 
         .btn-menu:focus { outline: none; }
 
-        .offcanvas-custom {
-            background-color: #000000 !important;
-            color: #ffffff;
-        }
-
-        .vanglare-nav-btn {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 1.2rem;
-            text-align: right;
-            width: 100%;
-            padding: 15px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s;
-        }
-
-        .vanglare-nav-btn:hover { color: #aaaaaa; }
-
         .vanglare-content-panel {
             display: none;
             flex-grow: 1; 
@@ -193,27 +173,78 @@
             width: 100%;
         }
 
-        /* =========================================
-           AJUSTE DE ANCHURA PARA PC
-           ========================================= */
         .contenido-centrado {
             width: 100%;
-            max-width: 1500px; /* <--- AUMENTADO para que sea más ancho en PC */
+            max-width: 1500px; 
             margin: 0 auto;
-            padding: 20px 2%; /* <--- Margen lateral reducido para aprovechar espacio */
+            padding: 20px 2%; 
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         /* =========================================
-           CARRUSEL
+           MENÚ LATERAL OFFCANVAS (BOTONES ANIMADOS)
+           ========================================= */
+        .offcanvas-custom {
+            background-color: #000000 !important;
+            color: #ffffff;
+            width: 400px !important; /* Tamaño para PC */
+        }
+
+        .nav-anim-btn {
+            margin: 15px 0;
+            height: auto;
+            background: transparent;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            
+            --border-right: 6px;
+            --text-stroke-color: rgba(255,255,255,0.6);
+            --animation-color: #37FF8B;
+            --fs-size: 1.5em; /* Tamaño base PC */
+            letter-spacing: 3px;
+            text-decoration: none;
+            font-size: var(--fs-size);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            position: relative;
+            text-transform: uppercase;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-stroke-color);
+        }
+
+        .nav-anim-btn .hover-text {
+            position: absolute;
+            box-sizing: border-box;
+            content: attr(data-text);
+            color: var(--animation-color);
+            width: 0%;
+            inset: 0;
+            border-right: var(--border-right) solid var(--animation-color);
+            overflow: hidden;
+            transition: 0.5s;
+            -webkit-text-stroke: 1px var(--animation-color);
+            white-space: nowrap; 
+        }
+
+        .nav-anim-btn:hover .hover-text,
+        .nav-anim-btn.animar-click .hover-text {
+            width: 100%;
+            filter: drop-shadow(0 0 23px var(--animation-color));
+        }
+
+        /* =========================================
+           CARRUSEL (TAMAÑO NORMAL Y MÁS GRANDE EN PC)
            ========================================= */
         .carousel-redondeado {
             width: 100%;
+            max-width: 850px; /* Tamaño normal para móvil/tablet */
+            margin: 0 auto;
             border-radius: 15px; 
             overflow: hidden; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: max-width 0.3s ease; /* Transición suave si se cambia de tamaño */
         }
 
         .carousel-item img {
@@ -221,6 +252,13 @@
             width: 100%;
             height: auto;
             object-fit: cover;
+        }
+
+        /* AQUÍ ESTÁ EL AJUSTE PARA HACERLO MÁS GRANDE SOLO EN PC */
+        @media (min-width: 1024px) {
+            .carousel-redondeado {
+                max-width: 1050px; /* Se hace un poco más grande en PC */
+            }
         }
 
         /* =========================================
@@ -428,6 +466,7 @@
             mix-blend-mode: multiply;
         }
 
+        /* BOTÓN DEL TICKET (Diseño Animado) */
         .uiverse-btn {
             background-color: #e6e7eb;
             text-align: center;
@@ -584,10 +623,19 @@
             .navbar-custom { padding: 15px 5%; }
             .logo-text { font-size: 22px; letter-spacing: 12px; padding-left: 12px; }
             
-            .contenido-centrado { padding: 15px 5%; } /* Se mantiene el margen en móvil */
+            .contenido-centrado { padding: 15px 5%; }
             .tarjetas-container { padding: 20px; }
             .flip-card-custom { min-height: 350px; }
             
+            /* Ajuste del menú Offcanvas al 60% en celular (como pediste) */
+            .offcanvas-custom {
+                width: 60% !important;
+            }
+
+            .nav-anim-btn {
+                --fs-size: 1.1em;
+            }
+
             .slc-header {
                 flex-direction: column;
                 gap: 15px;
@@ -658,10 +706,27 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body d-flex flex-column align-items-end">
-                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionInicio'); cerrarMenu()">Inicio</button>
-                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionNoticias'); cerrarMenu()">Novedades</button>
-                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionContacto'); cerrarMenu()">Contacto</button>
-                <button class="vanglare-nav-btn" onclick="cambiarVista('SeccionInfo'); cerrarMenu()">Información</button>
+                
+                <button class="nav-anim-btn" type="button" onclick="navegarConAnimacion('SeccionInicio', this)">
+                    <span class="actual-text"> INICIO </span>
+                    <span aria-hidden="true" class="hover-text"> INICIO </span>
+                </button>
+
+                <button class="nav-anim-btn" type="button" onclick="navegarConAnimacion('SeccionNoticias', this)">
+                    <span class="actual-text"> NOVEDADES </span>
+                    <span aria-hidden="true" class="hover-text"> NOVEDADES </span>
+                </button>
+
+                <button class="nav-anim-btn" type="button" onclick="navegarConAnimacion('SeccionContacto', this)">
+                    <span class="actual-text"> CONTACTO </span>
+                    <span aria-hidden="true" class="hover-text"> CONTACTO </span>
+                </button>
+
+                <button class="nav-anim-btn" type="button" onclick="navegarConAnimacion('SeccionInfo', this)">
+                    <span class="actual-text"> INFORMACIÓN </span>
+                    <span aria-hidden="true" class="hover-text"> INFORMACIÓN </span>
+                </button>
+
             </div>
         </div>
 
@@ -856,6 +921,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    // Transición de la Landing Page a la App
     function entrarAlApp() {
         document.getElementById('SeccionLanding').style.opacity = '0';
         setTimeout(() => {
@@ -865,6 +931,7 @@
         }, 500);
     }
 
+    // Ocultar/Mostrar Paneles
     function cambiarVista(nombreID) {
         let contenidos = document.getElementsByClassName("vanglare-content-panel");
         for (let i = 0; i < contenidos.length; i++) {
@@ -873,6 +940,7 @@
         document.getElementById(nombreID).style.display = "block";
     }
 
+    // Cerrar Menú Lateral
     function cerrarMenu() {
         let menuLateral = document.getElementById('menuLateral');
         let offcanvasInstance = bootstrap.Offcanvas.getInstance(menuLateral);
@@ -881,6 +949,7 @@
         }
     }
 
+    // Voltear Tarjetas de Trámites
     function alternarTarjeta(tarjetaId) {
         const icono = document.getElementById(tarjetaId + '-icono');
         const info = document.getElementById(tarjetaId + '-info');
@@ -892,6 +961,21 @@
             icono.style.display = 'flex';
             info.style.display = 'none';
         }
+    }
+
+    // Función del menú con la animación verde
+    function navegarConAnimacion(nombreID, botonElemento) {
+        botonElemento.classList.add('animar-click');
+        
+        setTimeout(() => {
+            cambiarVista(nombreID);
+            cerrarMenu();
+            
+            setTimeout(() => {
+                botonElemento.classList.remove('animar-click');
+            }, 300);
+            
+        }, 600); 
     }
 </script>
 
