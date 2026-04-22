@@ -102,10 +102,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%; 
+            padding: 20px 2%; /* Ajustado para dar más ancho */
             background-color: transparent;
             position: relative;
             flex-shrink: 0;
+            max-width: 1500px; /* Mismo límite que el contenido central */
+            margin: 0 auto;
+            width: 100%;
         }
 
         .logo-container {
@@ -190,12 +193,14 @@
             width: 100%;
         }
 
-        /* Contenedor para mantener centrado el contenido superior sin que toque los bordes */
+        /* =========================================
+           AJUSTE DE ANCHURA PARA PC
+           ========================================= */
         .contenido-centrado {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1500px; /* <--- AUMENTADO para que sea más ancho en PC */
             margin: 0 auto;
-            padding: 20px 4%;
+            padding: 20px 2%; /* <--- Margen lateral reducido para aprovechar espacio */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -485,7 +490,7 @@
         }
 
         /* =========================================
-           MAPA (Alineado con las otras tarjetas)
+           MAPA 
            ========================================= */
         .seccion-mapa-container {
             width: 100%; 
@@ -535,7 +540,7 @@
         }
 
         /* =========================================
-           FOOTER / PIE DE PÁGINA (100% ANCHO LADO A LADO)
+           FOOTER / PIE DE PÁGINA
            ========================================= */
         .vanglare-footer {
             width: 100%; 
@@ -565,13 +570,12 @@
         }
 
         .footer-imagen-bar img {
-            width: 100%; /* La imagen se estirará de extremo a extremo */
-            height: 150px; /* <--- ALTURA FIJA PARA QUE NO SE HAGA GIGANTE */
+            width: 100%; 
+            height: 150px; 
             display: block; 
-            object-fit: cover; /* <--- RECORTA LA IMAGEN SIN DEFORMARLA */
-            object-position: center; /* Centra el recorte */
+            object-fit: cover; 
+            object-position: center; 
         }
-
 
         /* =========================================
            MEDIA QUERIES (MÓVIL Y RESPONSIVIDAD)
@@ -580,11 +584,10 @@
             .navbar-custom { padding: 15px 5%; }
             .logo-text { font-size: 22px; letter-spacing: 12px; padding-left: 12px; }
             
-            .contenido-centrado { padding: 15px 5%; }
+            .contenido-centrado { padding: 15px 5%; } /* Se mantiene el margen en móvil */
             .tarjetas-container { padding: 20px; }
             .flip-card-custom { min-height: 350px; }
             
-            /* Móvil para el diseño Ticket */
             .slc-header {
                 flex-direction: column;
                 gap: 15px;
@@ -604,7 +607,6 @@
                 padding: 20px 20px 50px 20px; 
             }
 
-            /* Ajustes Mapa Móvil */
             .mapa-iframe-wrapper {
                 height: 300px; 
             }
@@ -615,12 +617,11 @@
                 width: 15%;
             }
 
-            /* Ajustes Footer Móvil */
             .footer-texto-bar p {
                 font-size: 0.8rem;
             }
             .footer-imagen-bar img {
-                height: 100px; /* Un poco más delgado en celular */
+                height: 100px; 
             }
         }
     </style>
@@ -642,7 +643,7 @@
         
         <header class="navbar-custom">
             <div class="logo-container">
-                <h1 class="logo-text">VANGLAR</h1>
+                <h1 class="logo-text">VANGLARE</h1>
             </div>
             <button class="btn-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
                 <span></span>
